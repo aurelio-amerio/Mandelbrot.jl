@@ -2,6 +2,7 @@ using Pkg
 Pkg.activate("Mandelbrot")
 using Mandelbrot
 using Plots
+using BenchmarkTools
 
 #%%
 # starting point
@@ -110,7 +111,8 @@ fractal4b_data = Mandelbrot.FractalData(
 )
 
 #%% number 1
-Mandelbrot.computeMandelbrot!(fractal1_data, use_GPU=true)
+@btime Mandelbrot.computeMandelbrot!(fractal1_data, use_GPU=true, verbose=false)
+@btime Mandelbrot.computeMandelbrot!(fractal1_data, use_GPU=false, verbose=false)
 
 Mandelbrot.display_fractal(fractal1_data,
     # filename = "mandelbrot-fractal/images/mandelbrot1.png"
@@ -162,3 +164,5 @@ Mandelbrot.preview_fractal(fractal4b_data)
 Mandelbrot.zoom!(fractal3_data, 5)
 fractal3_data
 Mandelbrot.move_center!(fractal3_data, 70, 0)
+
+get_active_backend()

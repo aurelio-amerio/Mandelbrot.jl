@@ -316,10 +316,33 @@ function computeMandelbrot_GPU(
     x_arr = range(xmin, stop = xmax, length = width)
     y_arr = range(ymin, stop = ymax, length = height)
 
-    xGrid = [i for i in x_arr, j in y_arr]
-    yGrid = [j for i in x_arr, j in y_arr]
+    dx = (xmax - xmin) / width
 
-    c = AFArray(xGrid + im * yGrid)
+    xGrid = [i for j in y_arr, i in x_arr]
+    yGrid = [j for j in y_arr, i in x_arr]
+
+    # digits = 2 + ceil(Int, -log10(dx))
+
+    # if digits <=7
+    #
+    #     c = AFArray(convert(Matrix{Float32}, xGrid + im * yGrid))
+    #
+    #     z = zeros(AFArray{Float32}, size(c))
+    #     count = zeros(AFArray{Float32}, size(c))
+    #
+    # else
+    #     if digits > 16
+    #         @info "GPU computations are likely to be inaccurate at this scale"
+    #     end
+    #
+    #     c = AFArray( xGrid + im * yGrid)
+    #
+    #     z = zeros(AFArray{Float64}, size(c))
+    #     count = zeros(AFArray{Float64}, size(c))
+    # end
+
+
+    c = AFArray( xGrid + im * yGrid)
 
     z = zeros(AFArray{Float64}, size(c))
     count = zeros(AFArray{Float64}, size(c))
