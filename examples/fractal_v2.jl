@@ -85,6 +85,18 @@ fractal3_data = Mandelbrot.FractalData(
     scale_function = scale3,
 )
 
+fractal3b_data = Mandelbrot.FractalData(
+    xmin3,
+    xmax3,
+    ymin3,
+    ymax3,
+    width = 2*Mandelbrot.w_4k,
+    height = 2*Mandelbrot.h_4k,
+    colormap = cmap3c,
+    maxIter = maxIter3,
+    scale_function = scale3,
+)
+
 cmap4 = Mandelbrot.alien_space(50)
 scale4 = x -> x^-5
 maxIter4 = 50000
@@ -111,8 +123,27 @@ fractal4b_data = Mandelbrot.FractalData(
 )
 
 #%% number 1
-@btime Mandelbrot.computeMandelbrot!(fractal1_data, use_GPU=true, verbose=false)
-@btime Mandelbrot.computeMandelbrot!(fractal1_data, use_GPU=false, verbose=false)
+@profiler Mandelbrot.computeMandelbrot!(
+    fractal1_data,
+    use_GPU = true,
+    verbose = true,
+)
+@profiler Mandelbrot.computeMandelbrot!(
+    fractal1_data,
+    use_GPU = false,
+    verbose = true,
+)
+
+@time Mandelbrot.computeMandelbrot!(
+    fractal3b_data,
+    use_GPU = true,
+    verbose = false,
+)
+@time Mandelbrot.computeMandelbrot!(
+    fractal3b_data,
+    use_GPU = false,
+    verbose = false,
+)
 
 Mandelbrot.display_fractal(fractal1_data,
     # filename = "mandelbrot-fractal/images/mandelbrot1.png"
@@ -150,12 +181,19 @@ Mandelbrot.preview_fractal(fractal3_data, scale = :linear)
 Mandelbrot.move_center!(fractal0_data, -1, 0)
 Mandelbrot.zoom!(fractal0_data, 1.5)
 Mandelbrot.get_coords(fractal0_data)
-Mandelbrot.set_coords(fractal0_data, (-1.6761523437499999, -1.6722460937499999, -0.0015624999999999999, 0.0015624999999999999)...)
+Mandelbrot.set_coords(
+    fractal0_data,
+    (
+     -1.6761523437499999,
+     -1.6722460937499999,
+     -0.0015624999999999999,
+     0.0015624999999999999,
+    )...,
+)
 #%%
 @code_warntype Mandelbrot.computeMandelbrot!(fractal0_data)
 fractal0_data.colormap = Mandelbrot.cycle_cmap(:algae, 42)
-Mandelbrot.display_fractal(
-    fractal0_data,
+Mandelbrot.display_fractal(fractal0_data,
     # filename = "mandelbrot-fractal/images/mandelbrot_navigation.png",
 )
 

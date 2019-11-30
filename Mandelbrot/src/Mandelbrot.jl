@@ -342,7 +342,7 @@ function computeMandelbrot_GPU(
     # end
 
 
-    c = AFArray( xGrid + im * yGrid)
+    c = AFArray(xGrid + im * yGrid)
 
     z = zeros(AFArray{Float64}, size(c))
     count = zeros(AFArray{Float64}, size(c))
