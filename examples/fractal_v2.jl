@@ -134,13 +134,13 @@ fractal4b_data = Mandelbrot.FractalData(
     verbose = true,
 )
 
-@time Mandelbrot.computeMandelbrot!(
-    fractal3b_data,
+@btime Mandelbrot.computeMandelbrot!(
+    fractal3_data,
     use_GPU = true,
     verbose = false,
 )
-@time Mandelbrot.computeMandelbrot!(
-    fractal3b_data,
+@btime Mandelbrot.computeMandelbrot!(
+    fractal3_data,
     use_GPU = false,
     verbose = false,
 )
