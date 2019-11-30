@@ -312,7 +312,6 @@ function computeMandelbrot_GPU(
     verbose = true,
 )
 
-
     x_arr = range(xmin, stop = xmax, length = width)
     y_arr = range(ymin, stop = ymax, length = height)
 
@@ -342,20 +341,37 @@ function computeMandelbrot_GPU(
     # end
 
 
-    c = AFArray( xGrid + im * yGrid)
+    cr = AFArray(xGrid)
+    ci = AFArray(yGrid)
 
-    z = zeros(AFArray{Float64}, size(c))
-    count = zeros(AFArray{Float64}, size(c))
+    zr = zeros(AFArray{Float64}, size(cr))
+    zi = zeros(AFArray{Float64}, size(ci))
+
+    zrsqr = cr.^2
+    zisqr = ci.^2
+
+    count = zeros(AFArray{Float64}, size(cr))
 
     if verbose
         @showprogress for n = 1:maxIter
-            z = z .* z .+ c
-            count = count + (abs(z) <= 2)
+            println(n)
+            zi = (zr .+ zi).^2 .- zrsqr .- zisqr
+            zi .+= ci
+            zr = zrsqr .- zisqr .+ cr
+            zrsqr = zr.^2
+            zisqr = zi.^2
+
+            count = count + ((zrsqr .+ zisqr) <= 4)
         end
     else
         for n = 1:maxIter
-            z = z .* z .+ c
-            count = count + (abs(z) <= 2)
+            zi = (zr .+ zi).^2 .- zrsqr .- zisqr
+            zi .+= ci
+            zr = zrsqr .- zisqr .+ cr
+            zrsqr = zr.^2
+            zisqr = zi.^2
+
+            count = count + ((zrsqr .+ zisqr) <= 4)
         end
     end
 

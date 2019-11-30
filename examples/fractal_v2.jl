@@ -111,6 +111,9 @@ fractal4b_data = Mandelbrot.FractalData(
 )
 
 #%% number 1
+Mandelbrot.computeMandelbrot!(fractal1_data, use_GPU=true, verbose=true)
+Mandelbrot.computeMandelbrot!(fractal1_data, use_GPU=false, verbose=true)
+
 @btime Mandelbrot.computeMandelbrot!(fractal1_data, use_GPU=true, verbose=false)
 @btime Mandelbrot.computeMandelbrot!(fractal1_data, use_GPU=false, verbose=false)
 
