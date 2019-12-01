@@ -1,5 +1,5 @@
 *.jl.cov
 *.jl.*.cov
 *.jl.mem
-mandelbrot_*.gif
+./mandelbrot_*.gif
 deps/deps.jl
