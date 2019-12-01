@@ -101,6 +101,11 @@ end
 function ice(nRepeat::Int = 1)
     return ColorGradient(repeat(["#193e7c", "#dde2ff"], nRepeat))
 end
+function fire_and_ice(nRepeat::Int = 1)
+    cmap = ColorGradient(vcat(cgrad(:inferno).colors, cgrad(:ice).colors))
+    return ColorGradient(repeat(cmap.colors, nRepeat))
+end
+
 
 function deep_space(nRepeat::Int = 1)
     return ColorGradient(repeat(["#000000", "#193e7c", "#dde2ff"], nRepeat))
@@ -113,8 +118,31 @@ function alien_space(nRepeat::Int = 1)
     ))
 end
 
+function funky_rainbow(nRepeat::Int = 1)
+    return ColorGradient(repeat(
+        [
+         "#833ab4",
+         "#fdcd1d",
+         "#45d0fc",
+         "#fc45ae",
+         "#747473",
+         "#454cfc",
+         "#fc4545",
+         "#d27625",
+         "#00ff10",
+         "#45a8fc",
+         "#833ab4",
+        ],
+        nRepeat,
+    ))
+end
+
 function cycle_cmap(cmap::Symbol, nRepeat::Int = 1)
     return ColorGradient(repeat(cgrad(cmap).colors, nRepeat))
+end
+
+function cycle_cmap(cmap::ColorGradient, nRepeat::Int = 1)
+    return ColorGradient(repeat(cmap.colors, nRepeat))
 end
 
 # utility functions to convert from bits to precision digits
@@ -132,10 +160,12 @@ end
 function display_fractal(
     fractal::Matrix;
     colormap = cycle_cmap(:inferno, 3),
+    background_color = :white,
     scale = :linear,
     filename = :none,
+    offset = 0
 )
-    img = deepcopy(fractal)
+    img = deepcopy(fractal) .+ offset
     if scale == :log
         img = log.(img) # normalize image to have nicer colors
     elseif scale == :exp
@@ -152,6 +182,7 @@ function display_fractal(
         size = (size(img)[2], size(img)[1]),
         grid = false,
         framestyle = :none,
+        background_color = background_color
     )
 
     if filename != :none
@@ -162,20 +193,24 @@ function display_fractal(
 end
 
 # # version using the structure
-function display_fractal(fractal::FractalData; scale = :none, filename = :none)
+function display_fractal(fractal::FractalData; scale = :none, filename = :none, offset=0)
     if scale == :none
         display_fractal(
             fractal.fractal,
             colormap = fractal.colormap,
+            background_color = fractal.background_color,
             scale = fractal.scale_function,
             filename = filename,
+            offset = offset,
         )
     else
         display_fractal(
             fractal.fractal,
             colormap = fractal.colormap,
+            background_color = fractal.background_color,
             scale = scale,
             filename = filename,
+            offset = offset
         )
     end
 end
@@ -335,138 +370,139 @@ end
 
 # v2
 
+# function create_animation_old_v2(
+#     coords_stop::NTuple{4,AbstractFloat},
+#     coords_start = :auto;
+#     width = w_lr,
+#     height = h_lr,
+#     maxIter = :auto,
+#     colormap = cycle_cmap(:inferno, 2),
+#     scale = :linear,
+#     filename = "mandelbrot_$(rand(UInt))$(rand(UInt)).gif",
+#     n_frames = 100,
+#     fps = 10,
+# )
+#     p = Progress(n_frames)
+#     update!(p, 0)
+#     jj = 0
+#
+#     xmin_f, xmax_f, ymin_f, ymax_f = coords_stop
+#     xc_f = (xmax_f + xmin_f) / 2
+#     yc_f = (ymax_f + ymin_f) / 2
+#
+#     if coords_start == :auto
+#         xmin_i = xc_f - 1.5
+#         xmax_i = xc_f + 1.5
+#         ymin_i = yc_f - 1.2
+#         ymax_i = yc_f + 1.2
+#     else
+#         xmin_i, xmax_i, ymin_i, ymax_i = coords_start
+#     end
+#
+#     xc_i = (xmax_i + xmin_i) / 2
+#     yc_i = (ymax_i + ymin_i) / 2
+#
+#
+#     dxc = xc_f - xc_i
+#     dyc = yc_f - yc_i
+#
+#     dxc_arr = range(0, dxc, length = n_frames)
+#     dyc_arr = range(0, dyc, length = n_frames)
+#
+#     dW_i = abs(xmax_i - xmin_i)
+#     dW_f = abs(xmax_f - xmin_f)
+#     dH_i = abs(ymax_i - ymin_i)
+#     dH_f = abs(ymax_f - ymin_f)
+#
+#     dW_arr = 10 .^ range(log10(dW_i), log10(dW_f), length = n_frames)
+#     dH_arr = 10 .^ range(log10(dH_i), log10(dH_f), length = n_frames)
+#
+#     xc_arr = dxc_arr .+ xc_i
+#     yc_arr = dyc_arr .+ yc_i
+#
+#     xmin_arr = xc_arr .- dW_arr / 2
+#     xmax_arr = xc_arr .+ dW_arr / 2
+#     ymin_arr = yc_arr .- dH_arr / 2
+#     ymax_arr = yc_arr .+ dH_arr / 2
+#
+#     images = zeros(n_frames, height, width)
+#
+#     if maxIter == :auto
+#         nIters = 50
+#         maxVal = 0
+#         anim = @animate for i = 1:n_frames
+#             nIters_new = 50 +
+#                          round(Int, log10(4 / abs(xmax_arr[i] - xmin_arr[i]))^4)
+#
+#             nIters = max(nIters, nIters_new)
+#             img = computeMandelbrot(
+#                 xmin_arr[i],
+#                 xmax_arr[i],
+#                 ymin_arr[i],
+#                 ymax_arr[i],
+#                 width,
+#                 height,
+#                 nIters,
+#                 false,
+#             )
+#
+#             maxVal = max(maxVal, maximum(img))
+#             img[1, 1] = maxVal
+#             img[1, 2] = 0.0
+#
+#             display_fractal(
+#                 img,
+#                 colormap = colormap,
+#                 scale = scale,
+#                 filename = :none,
+#             )
+#
+#             jj += 1
+#             update!(p, jj)
+#         end
+#     else
+#         anim = @animate for i = 1:n_frames
+#             img = computeMandelbrot(
+#                 xmin_arr[i],
+#                 xmax_arr[i],
+#                 ymin_arr[i],
+#                 ymax_arr[i],
+#                 width,
+#                 height,
+#                 maxIter,
+#                 false,
+#             )
+#
+#             maxVal = max(maxVal, maximum(img))
+#             img[1, 1] = maxVal
+#             img[1, 2] = 0.0
+#
+#             display_fractal(
+#                 img,
+#                 colormap = colormap,
+#                 scale = scale,
+#                 filename = :none,
+#             )
+#
+#             jj += 1
+#             update!(p, jj)
+#         end
+#     end
+#     gif(anim, filename, fps = fps)
+#
+# end
+
+#v3
+
 function create_animation(
     coords_stop::NTuple{4,AbstractFloat},
     coords_start = :auto;
     width = w_lr,
     height = h_lr,
     maxIter = :auto,
-    colormap = cycle_cmap(:inferno, 2),
-    scale = :linear,
-    filename = "mandelbrot_$(rand(UInt))$(rand(UInt)).gif",
-    n_frames = 100,
-    fps = 10,
-)
-    p = Progress(n_frames)
-    update!(p, 0)
-    jj = 0
-
-    xmin_f, xmax_f, ymin_f, ymax_f = coords_stop
-    xc_f = (xmax_f + xmin_f) / 2
-    yc_f = (ymax_f + ymin_f) / 2
-
-    if coords_start == :auto
-        xmin_i = xc_f - 1.5
-        xmax_i = xc_f + 1.5
-        ymin_i = yc_f - 1.2
-        ymax_i = yc_f + 1.2
-    else
-        xmin_i, xmax_i, ymin_i, ymax_i = coords_start
-    end
-
-    xc_i = (xmax_i + xmin_i) / 2
-    yc_i = (ymax_i + ymin_i) / 2
-
-
-    dxc = xc_f - xc_i
-    dyc = yc_f - yc_i
-
-    dxc_arr = range(0, dxc, length = n_frames)
-    dyc_arr = range(0, dyc, length = n_frames)
-
-    dW_i = abs(xmax_i - xmin_i)
-    dW_f = abs(xmax_f - xmin_f)
-    dH_i = abs(ymax_i - ymin_i)
-    dH_f = abs(ymax_f - ymin_f)
-
-    dW_arr = 10 .^ range(log10(dW_i), log10(dW_f), length = n_frames)
-    dH_arr = 10 .^ range(log10(dH_i), log10(dH_f), length = n_frames)
-
-    xc_arr = dxc_arr .+ xc_i
-    yc_arr = dyc_arr .+ yc_i
-
-    xmin_arr = xc_arr .- dW_arr / 2
-    xmax_arr = xc_arr .+ dW_arr / 2
-    ymin_arr = yc_arr .- dH_arr / 2
-    ymax_arr = yc_arr .+ dH_arr / 2
-
-    images = zeros(n_frames, height, width)
-
-    if maxIter == :auto
-        nIters = 50
-        maxVal = 0
-        anim = @animate for i = 1:n_frames
-            nIters_new = 50 +
-                         round(Int, log10(4 / abs(xmax_arr[i] - xmin_arr[i]))^4)
-
-            nIters = max(nIters, nIters_new)
-            img = computeMandelbrot(
-                xmin_arr[i],
-                xmax_arr[i],
-                ymin_arr[i],
-                ymax_arr[i],
-                width,
-                height,
-                nIters,
-                false,
-            )
-
-            maxVal = max(maxVal, maximum(img))
-            img[1, 1] = maxVal
-            img[1, 2] = 0.0
-
-            display_fractal(
-                img,
-                colormap = colormap,
-                scale = scale,
-                filename = :none,
-            )
-
-            jj += 1
-            update!(p, jj)
-        end
-    else
-        anim = @animate for i = 1:n_frames
-            img = computeMandelbrot(
-                xmin_arr[i],
-                xmax_arr[i],
-                ymin_arr[i],
-                ymax_arr[i],
-                width,
-                height,
-                maxIter,
-                false,
-            )
-
-            maxVal = max(maxVal, maximum(img))
-            img[1, 1] = maxVal
-            img[1, 2] = 0.0
-
-            display_fractal(
-                img,
-                colormap = colormap,
-                scale = scale,
-                filename = :none,
-            )
-
-            jj += 1
-            update!(p, jj)
-        end
-    end
-    gif(anim, filename, fps = fps)
-
-end
-
-#v3
-
-function create_animation_v3(
-    coords_stop::NTuple{4,AbstractFloat},
-    coords_start = :auto;
-    width = w_lr,
-    height = h_lr,
-    maxIter = :auto,
+    offset = 0,
     colormap = :inferno,
-    cycle_colormap=true,
+    cycle_colormap = true,
     scale = :linear,
     filename = "mandelbrot_$(rand(UInt))$(rand(UInt)).gif",
     n_frames = 100,
@@ -517,10 +553,10 @@ function create_animation_v3(
     #compute order of magnitude of the zoom
     if cycle_colormap
         magnitude = dW_i / dW_f
-        nRepetitions = ceil(Int,log10(magnitude))
+        nRepetitions = ceil(Int, log10(magnitude))
         cmap = cycle_cmap(colormap, nRepetitions)
     else
-        cmap=colormap
+        cmap = colormap
     end
 
     images = zeros(height, width, n_frames)
@@ -533,7 +569,7 @@ function create_animation_v3(
                          round(Int, log10(4 / abs(xmax_arr[i] - xmin_arr[i]))^4)
 
             nIters = max(nIters, nIters_new)
-            images[:,:,i] .= computeMandelbrot(
+            images[:, :, i] .= computeMandelbrot(
                 xmin_arr[i],
                 xmax_arr[i],
                 ymin_arr[i],
@@ -554,10 +590,10 @@ function create_animation_v3(
         update!(p, 0)
         jj = 0
 
-        anim = @animate for i in 1:n_frames
-            img = images[:,:,i]
-            img[1,1]=maxAll
-            img[1,2]=minAll
+        anim = @animate for i = 1:n_frames
+            img = images[:, :, i]
+            img[1, 1] = maxAll
+            img[1, 2] = minAll
 
             img .+= 10 #remove zeros
 
@@ -566,6 +602,7 @@ function create_animation_v3(
                 colormap = cmap,
                 scale = scale,
                 filename = :none,
+                offset = offset
             )
             jj += 1
             update!(p, jj)
@@ -575,7 +612,7 @@ function create_animation_v3(
         @info "Computing frames"
         nIters = maxIter
         for i = 1:n_frames
-            images[:,:,i] .= computeMandelbrot(
+            images[:, :, i] .= computeMandelbrot(
                 xmin_arr[i],
                 xmax_arr[i],
                 ymin_arr[i],
@@ -596,10 +633,10 @@ function create_animation_v3(
         update!(p, 0)
         jj = 0
 
-        anim = @animate for i in 1:n_frames
-            img = images[:,:,i]
-            img[1,1]=maxAll
-            img[1,2]=minAll
+        anim = @animate for i = 1:n_frames
+            img = images[:, :, i]
+            img[1, 1] = maxAll
+            img[1, 2] = minAll
 
             img .+= 10 #remove zeros
 
@@ -608,6 +645,7 @@ function create_animation_v3(
                 colormap = cmap,
                 scale = scale,
                 filename = :none,
+                offset = offset
             )
             jj += 1
             update!(p, jj)
