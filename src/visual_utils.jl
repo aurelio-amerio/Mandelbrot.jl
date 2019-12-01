@@ -11,10 +11,20 @@ h_HD = 1080
 w_4k = 3840
 h_4k = 2160
 
+@doc raw"""
+    get_coords(fractal::FractalData)
+
+Get the coordinates for the selected `FractalData` object.
+"""
 function get_coords(fractal::FractalData)
     return fractal.xmin, fractal.xmax, fractal.ymin, fractal.ymax
 end
 
+@doc raw"""
+    set_coords(fractal::FractalData, xmin, xmax, ymin, ymax)
+
+Set the coordinates for the desired FractalData object.
+"""
 function set_coords(fractal::FractalData, xmin, xmax, ymin, ymax)
     fractal.xmin, fractal.xmax, fractal.ymin, fractal.ymax = xmin,
         xmax,
@@ -24,6 +34,13 @@ function set_coords(fractal::FractalData, xmin, xmax, ymin, ymax)
 end
 
 # functions to move on the fractal
+@doc raw"""
+    move_center!(fractal::FractalData, nStepsX::Int, nStepsY::Int)
+
+Move the center of a FractalData objoct of n steps in the `x` or `y` direction.
+`nStepsX=1` equals to a 1% movement to the right, while `nStepsY=1` equals to a
+1% movement upside.
+"""
 function move_center!(fractal::FractalData, nStepsX::Int, nStepsY::Int)
 
     if nStepsX != 0
@@ -47,22 +64,47 @@ function move_center!(fractal::FractalData, nStepsX::Int, nStepsY::Int)
     return preview_fractal(fractal) #preview changes
 end
 
+@doc raw"""
+    move_up!(fractal::FractalData, nSteps::Int = 1)
+
+Move nSteps up. `nSteps = 1` equals to a 1% movement up.
+"""
 function move_up!(fractal::FractalData, nSteps::Int = 1)
     move_center!(fractal::FractalData, 0, nSteps)
 end
 
+@doc raw"""
+    move_down!(fractal::FractalData, nSteps::Int = 1)
+
+Move nSteps down. `nSteps = 1` equals to a 1% movement down.
+"""
 function move_down!(fractal::FractalData, nSteps::Int = 1)
     move_center!(fractal::FractalData, 0, -nSteps)
 end
 
+@doc raw"""
+    move_left!(fractal::FractalData, nSteps::Int = 1)
+
+Move nSteps left. `nSteps = 1` equals to a 1% movement left.
+"""
 function move_left!(fractal::FractalData, nSteps::Int = 1)
     move_center!(fractal::FractalData, -nSteps, 0)
 end
 
+@doc raw"""
+    move_right!(fractal::FractalData, nSteps::Int = 1)
+
+Move nSteps right. `nSteps = 1` equals to a 1% movement right.
+"""
 function move_right!(fractal::FractalData, nSteps::Int = 1)
     move_center!(fractal::FractalData, nSteps, 0)
 end
 
+@doc raw"""
+    zoom!(fractal::FractalData, zoom_factor::Real)
+
+Zoom at the current position by a factor `zoom_factor`.
+"""
 function zoom!(fractal::FractalData, zoom_factor::Real)
     xc = (fractal.xmax + fractal.xmin) / 2
     width = fractal.xmax - fractal.xmin
@@ -94,23 +136,39 @@ end
 
 # custom colorbars, generate them using https://cssgradient.io/
 
+@doc raw"""
+    pumpkin(nRepeat::Int = 1)
+
+Pumpkin colormap. `nRepeat` specifies the number of times the colormap loops over.
+"""
 function pumpkin(nRepeat::Int = 1)
     return ColorGradient(repeat([:black, :red, :orange], nRepeat))
 end
 
-function ice(nRepeat::Int = 1)
-    return ColorGradient(repeat(["#193e7c", "#dde2ff"], nRepeat))
-end
+@doc raw"""
+    fire_and_ice(nRepeat::Int = 1)
+
+"Fire and Ice" colormap. `nRepeat` specifies the number of times the colormap loops over.
+"""
 function fire_and_ice(nRepeat::Int = 1)
     cmap = ColorGradient(vcat(cgrad(:inferno).colors, cgrad(:ice).colors))
     return ColorGradient(repeat(cmap.colors, nRepeat))
 end
 
+@doc raw"""
+    deep_space(nRepeat::Int = 1)
 
+"Deep space" colormap. `nRepeat` specifies the number of times the colormap loops over.
+"""
 function deep_space(nRepeat::Int = 1)
     return ColorGradient(repeat(["#000000", "#193e7c", "#dde2ff"], nRepeat))
 end
 
+@doc raw"""
+    alien_space(nRepeat::Int = 1)
+
+"Alien space" colormap. `nRepeat` specifies the number of times the colormap loops over.
+"""
 function alien_space(nRepeat::Int = 1)
     return ColorGradient(repeat(
         ["#1a072a", "#ff3e24", "#ffa805", "#7b00ff"],
@@ -118,6 +176,11 @@ function alien_space(nRepeat::Int = 1)
     ))
 end
 
+@doc raw"""
+    funky_rainbow(nRepeat::Int = 1)
+
+"Funky rainbow" colormap. `nRepeat` specifies the number of times the colormap loops over.
+"""
 function funky_rainbow(nRepeat::Int = 1)
     return ColorGradient(repeat(
         [
@@ -137,6 +200,15 @@ function funky_rainbow(nRepeat::Int = 1)
     ))
 end
 
+@doc raw"""
+    cycle_cmap(cmap, nRepeat::Int = 1)
+
+Function to make a colormap cyclic.
+
+# Arguments
+- `cmap` may be either a `Symbol` or a `ColorGradient`.
+- `nRepeat` specifies the number of times the colormap loops over.
+"""
 function cycle_cmap(cmap::Symbol, nRepeat::Int = 1)
     return ColorGradient(repeat(cgrad(cmap).colors, nRepeat))
 end
@@ -146,17 +218,68 @@ function cycle_cmap(cmap::ColorGradient, nRepeat::Int = 1)
 end
 
 # utility functions to convert from bits to precision digits
+"""
+    bits_to_digits(bits::Int)
+
+Converts bits to the number of digits of accuracy.
+"""
 function bits_to_digits(bits::Int)
     return floor(bits * log10(2))
 end
 
+"""
+    digits_to_bits(digits::Int)
+
+Converts a number of figures to the corresponding number of bits required to achieve such accuracy.
+"""
 function digits_to_bits(digits::Int)
     return ceil(Int, digits / log10(2))
 end
 
 
 # utilities to display or preview the fractal
+@doc raw"""
+    display_fractal(fractal::FractalData; scale = :none, filename = :none, offset=0)
 
+    display_fractal(
+        fractal::Matrix;
+        colormap = cycle_cmap(:inferno, 3),
+        background_color = :white,
+        scale = :linear,
+        filename = :none,
+        offset = 0
+    )
+
+Function to display a fractal, can either use a matrix or a `FractalData` object.
+
+#Arguments
+- `fractal`: can either be a `Matrix` or a `FractalData` object.
+- `colormap`: the colormap which needs to be used, for `FractalData` uses the one stored insde the object.
+- `background_color`: the color of the backgroud, also applies to transparent zones, such as when `Inf` values are not plotted.
+For `FractalData` uses the one stored insde the object.
+- `scale`: a scale function which can be applied to the fractal image before plotting.
+If `:linear` is selected no scale function is applied. If `:none` is selected,
+uses the default scale function stored inside the `FractalData` object.
+- `filename`: if speccified, save the resulting image at that location.
+- `offset`: value to be summed to the image before plotting it.
+
+# Examples
+```jldoctest
+julia>  cmap1 = Mandelbrot.cycle_cmap(:inferno, 5)
+        xmin1 = -1.744453831814658538530
+        xmax1 = -1.744449945239591698236
+        ymin1 = 0.022017835126305555133
+        ymax1 = 0.022020017997233506531
+
+julia>  fractal1_data = FractalData(xmin1, xmax1, ymin1, ymax1, width = Mandelbrot.w_4k,
+                                    height = Mandelbrot.h_4k, colormap = cmap1,
+                                    maxIter = 1500, scale_function = log)
+
+julia>  computeMandelbrot!(fractal1_data)
+
+julia>  display_fractal(fractal1_data, filename = "mandelbrot1.png")
+```
+"""
 function display_fractal(
     fractal::Matrix;
     colormap = cycle_cmap(:inferno, 3),
@@ -215,6 +338,13 @@ function display_fractal(fractal::FractalData; scale = :none, filename = :none, 
     end
 end
 
+@doc raw```
+    preview_fractal( fractal_data::FractalData; scale = :linear, use_GPU = false)
+
+Function used to preview the fractal contained in a `FractalData` object before computing it.
+
+See also: [`display_fractal`](@ref)
+```
 function preview_fractal(
     fractal_data::FractalData;
     scale = :linear,
@@ -494,6 +624,27 @@ end
 
 #v3
 
+@doc raw"""
+    create_animation(
+        coords_stop::NTuple{4,AbstractFloat},
+        coords_start = :auto;
+        width = w_lr,
+        height = h_lr,
+        maxIter = :auto,
+        offset = 0,
+        colormap = :inferno,
+        cycle_colormap = true,
+        scale = :linear,
+        filename = "default",
+        n_frames = 100,
+        fps = 10,
+    )
+
+Computes an animated gif from `coords_start` to `coords_stop`.
+
+# TODO add description
+
+"""
 function create_animation(
     coords_stop::NTuple{4,AbstractFloat},
     coords_start = :auto;
@@ -504,10 +655,14 @@ function create_animation(
     colormap = :inferno,
     cycle_colormap = true,
     scale = :linear,
-    filename = "mandelbrot_$(rand(UInt))$(rand(UInt)).gif",
+    filename = "default",
     n_frames = 100,
     fps = 10,
 )
+    if filename == "default"
+        filename = "mandelbrot_$(rand(UInt))$(rand(UInt)).gif"
+    end
+
     p = Progress(n_frames)
     update!(p, 0)
     jj = 0

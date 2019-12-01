@@ -245,7 +245,6 @@ end
 Compute the Mandelbrot fractal for a given FractalData object.
 
 # Examples
-
 ```jldoctest
 julia>  cmap1 = Mandelbrot.cycle_cmap(:inferno, 5)
         xmin1 = -1.744453831814658538530
