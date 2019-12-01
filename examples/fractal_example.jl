@@ -145,9 +145,9 @@ display_fractal(fractal2_data,
 )
 
 #%% number 3
-50+round(Int,log10(4/abs(xmax1-xmin1))^4)
+50 + round(Int, log10(4 / abs(xmax1 - xmin1))^4)
 fractal3_data.colormap = Mandelbrot.cycle_cmap(:inferno, 10)
-fractal3_data.maxIter=50+round(Int,log10(4/abs(xmax4-xmin4))^5)
+fractal3_data.maxIter = 50 + round(Int, log10(4 / abs(xmax4 - xmin4))^5)
 computeMandelbrot!(fractal3_data)
 
 display_fractal(fractal3_data,
@@ -162,9 +162,9 @@ display_fractal(fractal4_data,
 )
 #%% navigation
 fractal0_data.maxIter = 500
-preview_fractal(fractal3_data, scale = :linear)
-Mandelbrot.move_center!(fractal0_data, -1, 0)
-Mandelbrot.zoom!(fractal0_data, 1.5)
+preview_fractal(fractal0_data, scale = :linear)
+Mandelbrot.move_center!(fractal0_data, 1, 0)
+Mandelbrot.zoom!(fractal0_data, 10)
 Mandelbrot.get_coords(fractal0_data)
 Mandelbrot.set_coords(
     fractal0_data,
@@ -175,6 +175,21 @@ Mandelbrot.set_coords(
      0.0015624999999999999,
     )...,
 )
-
+computeMandelbrot!(fractal0_data)
+fractal0_data.colormap = Mandelbrot.cycle_cmap(:inferno, 1)
+scale = x -> log(x)
+display_fractal(fractal0_data, scale = scale)
 #%%
-Mandelbrot.create_animation((xmin3, xmax3, ymin3, ymax3), n_frames=500, scale=:linear)
+Mandelbrot.create_animation_v3(
+    (xmin3, xmax3, ymin3, ymax3),
+    n_frames = 500,
+    scale = log10,
+    # colormap = :inferno,
+)
+#
+# size(fractal0_data.fractal)
+#
+# 3 / (xmax3 - xmin3)
+#
+# x^-500
+# x = (3 / (xmax3 - xmin3))^(-1 / 500)
