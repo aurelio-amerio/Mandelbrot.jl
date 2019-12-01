@@ -1,5 +1,10 @@
 # compute mandelbrot
+"""
+    mandelbrotBoundCheck(cr::AbstractFloat, ci::AbstractFloat, maxIter::Int = 1000)
 
+Check whether a point belongs to the Mandelbrot Set.
+Optimized for fast computation.
+"""
 function mandelbrotBoundCheck(
     cr::T,
     ci::T,
@@ -24,6 +29,20 @@ function mandelbrotBoundCheck(
     return result
 end
 
+"""
+    computeMandelbrot(
+        xmin::Float64,
+        xmax::Float64,
+        ymin::Float64,
+        ymax::Float64,
+        width::Int = w_lr,
+        height::Int = h_lr,
+        maxIter::Int = 100,
+        verbose = true,
+    )
+
+Compute the Mandelbrot Fractal
+"""
 function computeMandelbrot(
     xmin::Float64,
     xmax::Float64,
@@ -69,6 +88,20 @@ function computeMandelbrot(
     return pixels
 end
 
+"""
+    computeMandelbrot(
+        xmin::BigFloat,
+        xmax::BigFloat,
+        ymin::BigFloat,
+        ymax::BigFloat,
+        width::Int = w_lr,
+        height::Int = h_lr,
+        maxIter::Int = 100,
+        verbose = true,
+    )
+
+Compute the Mandelbrot fractal using arbitrary precision computations (needed for deep zooms).
+"""
 function computeMandelbrot(
     xmin::BigFloat,
     xmax::BigFloat,
@@ -122,6 +155,19 @@ function computeMandelbrot(
 end
 
 # gpu version
+"""
+    computeMandelbrot_GPU(
+        xmin::Float64,
+        xmax::Float64,
+        ymin::Float64,
+        ymax::Float64,
+        width::Int = w_lr,
+        height::Int = h_lr,
+        maxIter::Int = 100,
+        verbose = true)
+
+Compute the Mandelbrot fractal using the GPU.
+"""
 function computeMandelbrot_GPU(
     xmin::Float64,
     xmax::Float64,
@@ -190,6 +236,32 @@ function computeMandelbrot_GPU(
 end
 
 # compact interface
+"""
+    computeMandelbrot!(
+        fractal_data::FractalData;
+        verbose = true,
+        use_GPU = false)
+
+Compute the Mandelbrot fractal for a given FractalData object.
+
+# Examples
+
+```jldoctest
+julia>  cmap1 = Mandelbrot.cycle_cmap(:inferno, 5)
+        xmin1 = -1.744453831814658538530
+        xmax1 = -1.744449945239591698236
+        ymin1 = 0.022017835126305555133
+        ymax1 = 0.022020017997233506531
+
+julia>  fractal1_data = FractalData(xmin1, xmax1, ymin1, ymax1, width = Mandelbrot.w_4k,
+                                    height = Mandelbrot.h_4k, colormap = cmap1,
+                                    maxIter = 1500, scale_function = log)
+
+julia>  computeMandelbrot!(fractal1_data)
+
+julia>  display_fractal(fractal1_data, filename = "mandelbrot1.png")
+```
+"""
 function computeMandelbrot!(
     fractal_data::FractalData;
     verbose = true,
