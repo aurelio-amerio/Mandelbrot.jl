@@ -126,7 +126,7 @@ ymax = 0.023304267156089095573
 Mandelbrot.create_animation((xmin, xmax, ymin, ymax), n_frames = 500, scale = log10, colormap = Mandelbrot.fire_and_ice())
 ```
 
-You can see the resulting gif [here](gif/mandelbrot_into_the_eye1.gif) (33Mb).
+You can see the resulting gif [here](https://github.com/aurelio-amerio/techytok-examples/blob/master/mandelbrot-fractal/gif/mandelbrot_into_the_eye1.gif) (33Mb).
 
 # Progress
 
