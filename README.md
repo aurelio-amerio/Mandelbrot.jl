@@ -2,7 +2,7 @@
 
 This is a library written in Julia to compute Mandelbrot fractals, using multi-threading and optionally GPU computing.
 
-![align-center](images/mandelbrot1c.png)
+![align-center](images/mandelbrot1c_small.jpg)
 
 # Installation
 
@@ -62,7 +62,7 @@ computeMandelbrot!(fractal1_data)
 display_fractal(fractal1_data, filename = "mandelbrot1.png")
 ```
 
-![image-center](images/mandelbrot1.png)
+![image-center](images/mandelbrot1_small.jpg)
 
 ## Interactive navigation
 
@@ -124,9 +124,8 @@ ymax = 0.023304267156089095573
 Mandelbrot.create_animation((xmin, xmax, ymin, ymax), n_frames = 500, scale = log10, colormap = Mandelbrot.fire_and_ice())
 ```
 
-![image-center](gif/mandelbrot_into_the_eye1.gif)
+You can see the resulting gif [here](gif/mandelbrot_into_the_eye1.gif) (33Mb).
 
 # Progress
 
 This is the first release of this library, much more work has to be done, currently I need to find a way to make smoother colormaps for the animations and implement correctly the perturbative theory computation schemes described at [Wikipedia](https://en.wikipedia.org/wiki/Mandelbrot_set#Perturbation_theory_and_series_approximation) and [mathr.co.uk](https://mathr.co.uk/blog/2016-03-06_simpler_series_approximation.html). Any help and contribution is appreciated!
-
