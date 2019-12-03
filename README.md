@@ -10,25 +10,12 @@ You can find more 4k images in the [images](images/) folder of this repository.
 
 Before you install this package, please download and install [ArrayFire](https://arrayfire.com/download/). Once you have rebooted your system you can continue with the installation.
 
-Please clone/download this repository or type in the REPL:
-
-```julia
-using Pkg
-Pkg.add("https://github.com/aurelio-amerio/Mandelbrot.jl")
-```
-
-If you have chosen to clone/download the repository, to use this package you need to start Julia, cd to the folder containing this repository and type in the REPL:
+Please clone/download this repository and than start Julia in the package folder, then type in the REPL:
 
 ```julia
 using Pkg
 Pkg.activate("./")
 Pkg.instantiate()
-using Mandelbrot
-```
-
-If you have chosen to add directly the repository using `Pkg.add` then you only need to import the package as usual:
-
-```julia
 using Mandelbrot
 ```
 
