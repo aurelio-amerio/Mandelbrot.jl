@@ -41,7 +41,9 @@ end
         verbose = true,
     )
 
-Compute the Mandelbrot Fractal
+Compute the Mandelbrot Fractal.
+
+See also: [`computeMandelbrot!`](@ref), [`computeMandelbrot_GPU`](@ref)
 """
 function computeMandelbrot(
     xmin::Float64,
@@ -101,6 +103,7 @@ end
     )
 
 Compute the Mandelbrot fractal using arbitrary precision computations (needed for deep zooms).
+See also: [`computeMandelbrot!`](@ref), [`computeMandelbrot_GPU`](@ref)
 """
 function computeMandelbrot(
     xmin::BigFloat,
@@ -167,6 +170,8 @@ end
         verbose = true)
 
 Compute the Mandelbrot fractal using the GPU.
+
+See also: [`computeMandelbrot!`](@ref), [`computeMandelbrot`](@ref)
 """
 function computeMandelbrot_GPU(
     xmin::Float64,
@@ -252,14 +257,14 @@ julia>  cmap1 = Mandelbrot.cycle_cmap(:inferno, 5)
         ymin1 = 0.022017835126305555133
         ymax1 = 0.022020017997233506531
 
-julia>  fractal1_data = FractalData(xmin1, xmax1, ymin1, ymax1, width = Mandelbrot.w_4k,
-                                    height = Mandelbrot.h_4k, colormap = cmap1,
-                                    maxIter = 1500, scale_function = log)
+julia>  fractal1_data = FractalData(xmin1, xmax1, ymin1, ymax1, width = Mandelbrot.w_4k, height = Mandelbrot.h_4k, colormap = cmap1, maxIter = 1500, scale_function = log)
 
 julia>  computeMandelbrot!(fractal1_data)
 
 julia>  display_fractal(fractal1_data, filename = "mandelbrot1.png")
 ```
+
+See also: [`computeMandelbrot`](@ref)
 """
 function computeMandelbrot!(
     fractal_data::FractalData;

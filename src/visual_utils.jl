@@ -255,29 +255,24 @@ Function to display a fractal, can either use a matrix or a `FractalData` object
 #Arguments
 - `fractal`: can either be a `Matrix` or a `FractalData` object.
 - `colormap`: the colormap which needs to be used, for `FractalData` uses the one stored insde the object.
-- `background_color`: the color of the backgroud, also applies to transparent zones, such as when `Inf` values are not plotted.
-For `FractalData` uses the one stored insde the object.
-- `scale`: a scale function which can be applied to the fractal image before plotting.
-If `:linear` is selected no scale function is applied. If `:none` is selected,
-uses the default scale function stored inside the `FractalData` object.
+- `background_color`: the color of the backgroud, also applies to transparent zones, such as when `Inf` values are not plotted. For `FractalData` uses the one stored insde the object.
+- `scale`: a scale function which can be applied to the fractal image before plotting. If `:linear` is selected no scale function is applied. If `:none` is selected, uses the default scale function stored inside the `FractalData` object.
 - `filename`: if speccified, save the resulting image at that location.
 - `offset`: value to be summed to the image before plotting it.
 
 # Examples
 ```jldoctest
-julia>  cmap1 = Mandelbrot.cycle_cmap(:inferno, 5)
-        xmin1 = -1.744453831814658538530
-        xmax1 = -1.744449945239591698236
-        ymin1 = 0.022017835126305555133
-        ymax1 = 0.022020017997233506531
+julia> cmap1 = Mandelbrot.cycle_cmap(:inferno, 5)
+       xmin1 = -1.744453831814658538530
+       xmax1 = -1.744449945239591698236
+       ymin1 = 0.022017835126305555133
+       ymax1 = 0.022020017997233506531
 
-julia>  fractal1_data = FractalData(xmin1, xmax1, ymin1, ymax1, width = Mandelbrot.w_4k,
-                                    height = Mandelbrot.h_4k, colormap = cmap1,
-                                    maxIter = 1500, scale_function = log)
+julia> fractal1_data = FractalData(xmin1, xmax1, ymin1, ymax1, width = Mandelbrot.w_4k, height = Mandelbrot.h_4k, colormap = cmap1, maxIter = 1500, scale_function = log)
 
-julia>  computeMandelbrot!(fractal1_data)
+julia> computeMandelbrot!(fractal1_data)
 
-julia>  display_fractal(fractal1_data, filename = "mandelbrot1.png")
+julia> display_fractal(fractal1_data, filename = "mandelbrot1.png")
 ```
 """
 function display_fractal(
@@ -338,13 +333,13 @@ function display_fractal(fractal::FractalData; scale = :none, filename = :none, 
     end
 end
 
-@doc raw```
+@doc raw"""
     preview_fractal( fractal_data::FractalData; scale = :linear, use_GPU = false)
 
 Function used to preview the fractal contained in a `FractalData` object before computing it.
 
 See also: [`display_fractal`](@ref)
-```
+"""
 function preview_fractal(
     fractal_data::FractalData;
     scale = :linear,
@@ -642,7 +637,29 @@ end
 
 Computes an animated gif from `coords_start` to `coords_stop`.
 
-# TODO add description
+# Arguments
+- coords_stop: a 4-tuple containing (xmin, xmax, ymin, ymax) of the ending point.
+- coords_start: a 4-tuple containing (xmin, xmax, ymin, ymax) of the starting point. If `:auto`, start from a zoomed out Mandelbrot fractal
+- width: width in pixels
+- height: height in pixels
+- maxIter: maximum number of iterations, if `:auto` tries to automatically determine it for each frame.
+- offset: value to be added to the fractal matrix before `scale` is applied. It is better not to use it with tracendental scale functions.
+- colormap: a colormap, either a valid `Symbol` or a `ColorGradient`
+- cycle_colormap: choose whether to automatically cycle the colormap.
+- scale: scale funciton to be applied to the fractal matrix before it is plotted.
+- filename: if set, save the animation at the specified position, else save it at the current working directory with a random name in the format `mandelbrot_*.gif`.
+- n_frames: number of frames to be computed.
+- fps: frames per secod.
+
+# Examples
+```jldoctest
+julia> xmin = 0.307567454839614329536
+julia> xmax = 0.307567454903142214608
+julia> ymin = 0.023304267108419154581
+julia> ymax = 0.023304267156089095573
+
+julia> Mandelbrot.create_animation((xmin, xmax, ymin, ymax), n_frames = 500, scale = log10, colormap = Mandelbrot.fire_and_ice())
+```
 
 """
 function create_animation(

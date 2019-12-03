@@ -1,5 +1,6 @@
 using Pkg
 Pkg.activate("./")
+Pkg.instantiate()
 using Mandelbrot
 using Plots
 using BenchmarkTools
@@ -11,8 +12,6 @@ xmin = -2.2
 xmax = 0.8
 ymin = -1.2
 ymax = 1.2
-
-(-2.2, 0.8, -1.2, 1.2)
 
 fractal0_data = FractalData(
     xmin,
@@ -156,6 +155,13 @@ display_fractal(fractal2_data,
 
 #%% number 3
 computeMandelbrot!(fractal3_data)
+
+display_fractal(fractal3_data,
+    # filename = "mandelbrot-fractal/images/mandelbrot3d.png"
+)
+#%% number 3 using GPU
+@btime computeMandelbrot!(fractal3_data, use_GPU=true, verbose=false)
+@btime computeMandelbrot!(fractal3_data, use_GPU=false, verbose=false)
 
 display_fractal(fractal3_data,
     # filename = "mandelbrot-fractal/images/mandelbrot3d.png"
