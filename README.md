@@ -4,6 +4,8 @@ This is a library written in Julia to compute Mandelbrot fractals, using multi-t
 
 ![align-center](images/mandelbrot1c_small.jpg)
 
+You can find more 4k images in the [images](images/) folder of this repository.
+
 # Installation
 
 Before you install this package, please download and install [ArrayFire](https://arrayfire.com/download/). Once you have rebooted your system you can continue with the installation.
@@ -109,7 +111,7 @@ display_fractal(fractal0_data, scale = x->1/log10(x),
 ) #plot and save the fractal
 ```
 
-![image-center](images/mandelbrot_movement.png)
+![image-center](images/mandelbrot_movement_small.jpg)
 
 ## Animations
 
