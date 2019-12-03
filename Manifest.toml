@@ -180,7 +180,7 @@ uuid = "69de0a69-1ddd-5017-9359-2bf0b02dc9f0"
 version = "0.3.10"
 
 [[Pkg]]
-deps = ["Dates", "LibGit2", "Markdown", "Printf", "REPL", "Random", "SHA", "UUIDs"]
+deps = ["Dates", "LibGit2", "Libdl", "Logging", "Markdown", "Printf", "REPL", "Random", "SHA", "UUIDs"]
 uuid = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 
 [[PlotThemes]]
@@ -197,9 +197,9 @@ version = "0.6.1"
 
 [[Plots]]
 deps = ["Base64", "Contour", "Dates", "FFMPEG", "FixedPointNumbers", "GR", "GeometryTypes", "JSON", "LinearAlgebra", "Measures", "NaNMath", "Pkg", "PlotThemes", "PlotUtils", "Printf", "REPL", "Random", "RecipesBase", "Reexport", "Requires", "Showoff", "SparseArrays", "Statistics", "StatsBase", "UUIDs"]
-git-tree-sha1 = "e216292ed998e2ff5e4967f52133afdaff9616e2"
+git-tree-sha1 = "70e9bac47b12356d3bb69e9d2d1ab190020421dc"
 uuid = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
-version = "0.28.1"
+version = "0.28.2"
 
 [[Polynomials]]
 deps = ["LinearAlgebra", "RecipesBase"]

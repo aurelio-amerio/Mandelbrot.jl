@@ -1,18 +1,17 @@
 using Pkg
 Pkg.activate("./")
+Pkg.instantiate()
 using Mandelbrot
 using Plots
 using BenchmarkTools
 
-#%%
+#%% code to make some of the example images
 # starting point
 cmap = Mandelbrot.cycle_cmap(:inferno, 5)
 xmin = -2.2
 xmax = 0.8
 ymin = -1.2
 ymax = 1.2
-
-(-2.2, 0.8, -1.2, 1.2)
 
 fractal0_data = FractalData(
     xmin,
@@ -137,6 +136,16 @@ display_fractal(
     # filename = "mandelbrot-fractal/images/mandelbrot1b.png"
 )
 
+#%% let's change the colormap and the scale function
+fractal1_data.colormap = Mandelbrot.fire_and_ice(2)
+fractal1_data.background_color = :black
+scale = x-> x^-1
+
+display_fractal(fractal1_data, scale = scale,
+ # filename="images/mandelbrot1c",
+ offset=0)
+
+
 #%% number 2
 computeMandelbrot!(fractal2_data)
 
@@ -145,10 +154,14 @@ display_fractal(fractal2_data,
 )
 
 #%% number 3
-50+round(Int,log10(4/abs(xmax1-xmin1))^4)
-fractal3_data.colormap = Mandelbrot.cycle_cmap(:inferno, 10)
-fractal3_data.maxIter=50+round(Int,log10(4/abs(xmax4-xmin4))^5)
 computeMandelbrot!(fractal3_data)
+
+display_fractal(fractal3_data,
+    # filename = "mandelbrot-fractal/images/mandelbrot3d.png"
+)
+#%% number 3 using GPU
+@btime computeMandelbrot!(fractal3_data, use_GPU=true, verbose=false)
+@btime computeMandelbrot!(fractal3_data, use_GPU=false, verbose=false)
 
 display_fractal(fractal3_data,
     # filename = "mandelbrot-fractal/images/mandelbrot3d.png"
@@ -161,20 +174,33 @@ display_fractal(fractal4_data,
     # filename = "mandelbrot-fractal/images/mandelbrot4.png"
 )
 #%% navigation
-fractal0_data.maxIter = 500
-preview_fractal(fractal3_data, scale = :linear)
-Mandelbrot.move_center!(fractal0_data, -1, 0)
-Mandelbrot.zoom!(fractal0_data, 1.5)
-Mandelbrot.get_coords(fractal0_data)
-Mandelbrot.set_coords(
-    fractal0_data,
-    (
-     -1.6761523437499999,
-     -1.6722460937499999,
-     -0.0015624999999999999,
-     0.0015624999999999999,
-    )...,
-)
 
-#%%
-Mandelbrot.create_animation((xmin3, xmax3, ymin3, ymax3), n_frames=500, scale=:linear)
+fractal0_data.maxIter = 50
+preview_fractal(fractal0_data, scale = :linear)
+Mandelbrot.move_center!(fractal0_data, -41, 0)
+
+fractal0_data.maxIter = 500 #increas maximum number of iterations
+Mandelbrot.zoom!(fractal0_data, 100)
+Mandelbrot.move_center!(fractal0_data, -35, 0)
+Mandelbrot.zoom!(fractal0_data, 10)
+Mandelbrot.move_center!(fractal0_data, -30, 0)
+fractal0_data.maxIter = 1000
+preview_fractal(fractal0_data, scale = x->1/log10(x)) #nice fractal!
+
+coords = Mandelbrot.get_coords(fractal0_data) #let's save the coordinates for future use
+
+Mandelbrot.set_coords(fractal0_data, coords...)
+
+computeMandelbrot!(fractal0_data) # compute 4k resolution image
+display_fractal(fractal0_data, scale = x->1/log10(x),
+    filename = "images/mandelbrot_movement.png"
+) #plot and save the fractal
+
+#%% compute an animation up to point 3
+
+Mandelbrot.create_animation(
+    (xmin3, xmax3, ymin3, ymax3),
+    n_frames = 500,
+    scale = log10,
+    colormap = Mandelbrot.fire_and_ice(),
+)
