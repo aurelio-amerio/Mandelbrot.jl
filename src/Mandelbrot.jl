@@ -17,8 +17,8 @@ export FractalData,
        move_down!,
        move_left!,
        move_right!,
-       display_fractal,
-       preview_fractal
+       display,
+       preview
 
 
 end # end module

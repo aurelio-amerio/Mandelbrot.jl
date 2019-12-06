@@ -261,7 +261,7 @@ julia>  fractal1_data = FractalData(xmin1, xmax1, ymin1, ymax1, width = Mandelbr
 
 julia>  computeMandelbrot!(fractal1_data)
 
-julia>  display_fractal(fractal1_data, filename = "mandelbrot1.png")
+julia>  display(fractal1_data, filename = "mandelbrot1.png")
 ```
 
 See also: [`computeMandelbrot`](@ref)

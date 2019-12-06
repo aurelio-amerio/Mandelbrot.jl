@@ -61,7 +61,7 @@ function move_center!(fractal::FractalData, nStepsX::Int, nStepsY::Int)
         fractal.ymin = yc - height / 2
         fractal.ymax = yc + height / 2
     end
-    return preview_fractal(fractal) #preview changes
+    return preview(fractal) #preview changes
 end
 
 @doc raw"""
@@ -131,7 +131,7 @@ function zoom!(fractal::FractalData, zoom_factor::Real)
         fractal.ymax = BigFloat(fractal.ymax)
     end
 
-    return preview_fractal(fractal) #preview changes
+    return preview(fractal) #preview changes
 end
 
 # custom colorbars, generate them using https://cssgradient.io/
@@ -239,9 +239,9 @@ end
 
 # utilities to display or preview the fractal
 @doc raw"""
-    display_fractal(fractal::FractalData; scale = :none, filename = :none, offset=0)
+    display(fractal::FractalData; scale = :none, filename = :none, offset=0)
 
-    display_fractal(
+    display(
         fractal::Matrix;
         colormap = cycle_cmap(:inferno, 3),
         background_color = :white,
@@ -272,10 +272,10 @@ julia> fractal1_data = FractalData(xmin1, xmax1, ymin1, ymax1, width = Mandelbro
 
 julia> computeMandelbrot!(fractal1_data)
 
-julia> display_fractal(fractal1_data, filename = "mandelbrot1.png")
+julia> display(fractal1_data, filename = "mandelbrot1.png")
 ```
 """
-function display_fractal(
+function display(
     fractal::Matrix;
     colormap = cycle_cmap(:inferno, 3),
     background_color = :white,
@@ -311,9 +311,9 @@ function display_fractal(
 end
 
 # # version using the structure
-function display_fractal(fractal::FractalData; scale = :none, filename = :none, offset=0)
+function display(fractal::FractalData; scale = :none, filename = :none, offset=0)
     if scale == :none
-        display_fractal(
+        display(
             fractal.fractal,
             colormap = fractal.colormap,
             background_color = fractal.background_color,
@@ -322,7 +322,7 @@ function display_fractal(fractal::FractalData; scale = :none, filename = :none, 
             offset = offset,
         )
     else
-        display_fractal(
+        display(
             fractal.fractal,
             colormap = fractal.colormap,
             background_color = fractal.background_color,
@@ -334,13 +334,13 @@ function display_fractal(fractal::FractalData; scale = :none, filename = :none, 
 end
 
 @doc raw"""
-    preview_fractal( fractal_data::FractalData; scale = :linear, use_GPU = false)
+    preview( fractal_data::FractalData; scale = :linear, use_GPU = false)
 
 Function used to preview the fractal contained in a `FractalData` object before computing it.
 
-See also: [`display_fractal`](@ref)
+See also: [`display`](@ref)
 """
-function preview_fractal(
+function preview(
     fractal_data::FractalData;
     scale = :linear,
     use_GPU = false,
@@ -369,7 +369,7 @@ function preview_fractal(
         )
     end
 
-    return display_fractal(
+    return display(
         pixels,
         colormap = fractal_data.colormap,
         scale = scale,
@@ -455,7 +455,7 @@ end
 #                 false,
 #             )
 #
-#             display_fractal(
+#             display(
 #                 img,
 #                 colormap = colormap,
 #                 scale = scale,
@@ -478,7 +478,7 @@ end
 #                 false,
 #             )
 #
-#             display_fractal(
+#             display(
 #                 img,
 #                 colormap = colormap,
 #                 scale = scale,
@@ -575,7 +575,7 @@ end
 #             img[1, 1] = maxVal
 #             img[1, 2] = 0.0
 #
-#             display_fractal(
+#             display(
 #                 img,
 #                 colormap = colormap,
 #                 scale = scale,
@@ -602,7 +602,7 @@ end
 #             img[1, 1] = maxVal
 #             img[1, 2] = 0.0
 #
-#             display_fractal(
+#             display(
 #                 img,
 #                 colormap = colormap,
 #                 scale = scale,
@@ -769,7 +769,7 @@ function create_animation(
 
             img .+= 10 #remove zeros
 
-            display_fractal(
+            display(
                 img,
                 colormap = cmap,
                 scale = scale,
@@ -812,7 +812,7 @@ function create_animation(
 
             img .+= 10 #remove zeros
 
-            display_fractal(
+            display(
                 img,
                 colormap = cmap,
                 scale = scale,

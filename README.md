@@ -61,7 +61,7 @@ fractal1_data = FractalData(
 
 computeMandelbrot!(fractal1_data) 
 
-display_fractal(fractal1_data, filename = "mandelbrot1.png")
+display(fractal1_data, filename = "mandelbrot1.png")
 ```
 
 ![image-center](images/mandelbrot1_small.jpg)
@@ -90,7 +90,7 @@ fractal0_data = FractalData(
 )
 
 fractal0_data.maxIter = 50
-preview_fractal(fractal0_data, scale = :linear)
+preview(fractal0_data, scale = :linear)
 Mandelbrot.move_center!(fractal0_data, -41, 0)
 
 fractal0_data.maxIter = 500 #increas maximum number of iterations
@@ -99,14 +99,14 @@ Mandelbrot.move_left!(fractal0_data, 35)
 Mandelbrot.zoom!(fractal0_data, 10)
 Mandelbrot.move_left!(fractal0_data, 30, 0)
 fractal0_data.maxIter = 1000
-preview_fractal(fractal0_data, scale = x->1/log10(x)) #nice fractal!
+preview(fractal0_data, scale = x->1/log10(x)) #nice fractal!
 
 coords = Mandelbrot.get_coords(fractal0_data) #let's save the coordinates for future use
 
 Mandelbrot.set_coords(fractal0_data, coords...) #use this function if you want to quickly load some coordinates 
 
 computeMandelbrot!(fractal0_data) # compute 4k resolution image
-display_fractal(fractal0_data, scale = x->1/log10(x),
+display(fractal0_data, scale = x->1/log10(x),
     filename = "images/mandelbrot_movement.png"
 ) #plot and save the fractal
 ```

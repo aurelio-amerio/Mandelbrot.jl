@@ -126,11 +126,11 @@ fractal4b_data = FractalData(
 #%% number 1
 computeMandelbrot!(fractal1_data)
 
-display_fractal(fractal1_data,
+display(fractal1_data,
     # filename = "images/mandelbrot1.png"
 )
 #%%
-display_fractal(
+display(
     fractal1_data,
     scale = log,
     # filename = "mandelbrot-fractal/images/mandelbrot1b.png"
@@ -141,7 +141,7 @@ fractal1_data.colormap = Mandelbrot.fire_and_ice(2)
 fractal1_data.background_color = :black
 scale = x-> x^-1
 
-display_fractal(fractal1_data, scale = scale,
+display(fractal1_data, scale = scale,
  # filename="images/mandelbrot1c",
  offset=0)
 
@@ -149,34 +149,34 @@ display_fractal(fractal1_data, scale = scale,
 #%% number 2
 computeMandelbrot!(fractal2_data)
 
-display_fractal(fractal2_data,
+display(fractal2_data,
     # filename = "mandelbrot-fractal/images/mandelbrot2.png"
 )
 
 #%% number 3
 computeMandelbrot!(fractal3_data)
 
-display_fractal(fractal3_data,
+display(fractal3_data,
     # filename = "mandelbrot-fractal/images/mandelbrot3d.png"
 )
 #%% number 3 using GPU
 @btime computeMandelbrot!(fractal3_data, use_GPU=true, verbose=false)
 @btime computeMandelbrot!(fractal3_data, use_GPU=false, verbose=false)
 
-display_fractal(fractal3_data,
+display(fractal3_data,
     # filename = "mandelbrot-fractal/images/mandelbrot3d.png"
 )
 
 #%% number 4
 computeMandelbrot!(fractal4_data)
 
-display_fractal(fractal4_data,
+display(fractal4_data,
     # filename = "mandelbrot-fractal/images/mandelbrot4.png"
 )
 #%% navigation
 
 fractal0_data.maxIter = 50
-preview_fractal(fractal0_data, scale = :linear)
+preview(fractal0_data, scale = :linear)
 Mandelbrot.move_center!(fractal0_data, -41, 0)
 
 fractal0_data.maxIter = 500 #increas maximum number of iterations
@@ -185,14 +185,14 @@ Mandelbrot.move_center!(fractal0_data, -35, 0)
 Mandelbrot.zoom!(fractal0_data, 10)
 Mandelbrot.move_center!(fractal0_data, -30, 0)
 fractal0_data.maxIter = 1000
-preview_fractal(fractal0_data, scale = x->1/log10(x)) #nice fractal!
+preview(fractal0_data, scale = x->1/log10(x)) #nice fractal!
 
 coords = Mandelbrot.get_coords(fractal0_data) #let's save the coordinates for future use
 
 Mandelbrot.set_coords(fractal0_data, coords...)
 
 computeMandelbrot!(fractal0_data) # compute 4k resolution image
-display_fractal(fractal0_data, scale = x->1/log10(x),
+display(fractal0_data, scale = x->1/log10(x),
     filename = "images/mandelbrot_movement.png"
 ) #plot and save the fractal
 
