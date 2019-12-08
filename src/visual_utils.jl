@@ -208,13 +208,24 @@ Function to make a colormap cyclic.
 # Arguments
 - `cmap` may be either a `Symbol` or a `ColorGradient`.
 - `nRepeat` specifies the number of times the colormap loops over.
+- `cyclic`: whether to cycle the colormap.
 """
-function cycle_cmap(cmap::Symbol, nRepeat::Int = 1)
-    return ColorGradient(repeat(cgrad(cmap).colors, nRepeat))
+function cycle_cmap(cmap::Symbol, nRepeat::Int = 1, cyclic=false)
+    if cyclic
+        colors = vcat(cgrad(cmap).colors, revert(cgrad(cmap).colors))
+        return ColorGradient(repeat(colors, nRepeat))
+    else
+        return ColorGradient(repeat(cgrad(cmap).colors, nRepeat))
+    end
 end
 
-function cycle_cmap(cmap::ColorGradient, nRepeat::Int = 1)
-    return ColorGradient(repeat(cmap.colors, nRepeat))
+function cycle_cmap(cmap::ColorGradient, nRepeat::Int = 1, cyclic=false)
+    if cyclic
+        colors = vcat(cmap.colors, revert(cmap.colors))
+        return ColorGradient(repeat(colors, nRepeat))
+    else
+        return ColorGradient(repeat(cmap.colors, nRepeat))
+    end
 end
 
 # utility functions to convert from bits to precision digits
@@ -826,3 +837,4 @@ function create_animation(
     gif(anim, filename, fps = fps)
 
 end
+d

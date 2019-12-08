@@ -142,6 +142,39 @@ fractal5_data = FractalData(
     scale_function = scale4,
 )
 
+xmin6=BigFloat("-0.7500679710085359722781")
+xmax6=BigFloat("-0.7500679710085335423022")
+ymin6=BigFloat("0.0066482323597727934007")
+ymax6=BigFloat("0.0066482323597746227151")
+fractal6_data = FractalData(
+    xmin6,
+    xmax6,
+    ymin6,
+    ymax6,
+    width = Mandelbrot.w_HD,
+    height = Mandelbrot.h_HD,
+    colormap = cmap5,
+    maxIter = 150000,
+    scale_function = scale4,
+)
+
+
+xmin7=-0.048039235368553826
+xmax7=-0.048039193307296899
+ymin7=0.6746533946423985
+ymax7=0.6746534263607233
+
+fractal7_data = FractalData(
+    xmin7,
+    xmax7,
+    ymin7,
+    ymax7,
+    width = Mandelbrot.w_4k,
+    height = Mandelbrot.h_4k,
+    colormap = cmap5,
+    maxIter = 5000,
+    scale_function = scale4,
+)
 #%% number 1
 computeMandelbrot!(fractal1_data)
 
@@ -192,11 +225,22 @@ computeMandelbrot!(fractal4_data)
 displayMandelbrot(fractal4_data,
     # filename = "mandelbrot-fractal/images/mandelbrot4.png"
 )
-#%%
+#%% number 5
 
 computeMandelbrot!(fractal5_data)
 Mandelbrot.displayMandelbrot(fractal5_data, scale=x->-1/x, filename="images/mandelbrot5")
 
+#%% number 6
+preview(fractal6_data)
+Mandelbrot.move_right!(fractal6_data, 20)
+
+#%% number 7
+Mandelbrot.get_coords(fractal7_data)
+fractal7_data.colormap=Mandelbrot.cycle_cmap(:inferno,3)
+fractal7_data.colormap=Mandelbrot.fire_and_ice(2)
+move_center!(fractal7_data,-2,0)
+computeMandelbrot!(fractal7_data)
+displayMandelbrot(fractal7_data, scale=x->-1/x, filename="images/mandelbrot7")
 #%% navigation
 
 fractal0_data.maxIter = 50
