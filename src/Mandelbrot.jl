@@ -17,7 +17,7 @@ export FractalData,
        move_down!,
        move_left!,
        move_right!,
-       display,
+       displayMandelbrot,
        preview
 
 

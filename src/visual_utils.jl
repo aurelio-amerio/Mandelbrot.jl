@@ -237,11 +237,11 @@ function digits_to_bits(digits::Int)
 end
 
 
-# utilities to display or preview the fractal
+# utilities to displayMandelbrot or preview the fractal
 @doc raw"""
-    display(fractal::FractalData; scale = :none, filename = :none, offset=0)
+    displayMandelbrot(fractal::FractalData; scale = :none, filename = :none, offset=0)
 
-    display(
+    displayMandelbrot(
         fractal::Matrix;
         colormap = cycle_cmap(:inferno, 3),
         background_color = :white,
@@ -250,7 +250,7 @@ end
         offset = 0
     )
 
-Function to display a fractal, can either use a matrix or a `FractalData` object.
+Function to displayMandelbrot a fractal, can either use a matrix or a `FractalData` object.
 
 #Arguments
 - `fractal`: can either be a `Matrix` or a `FractalData` object.
@@ -272,10 +272,10 @@ julia> fractal1_data = FractalData(xmin1, xmax1, ymin1, ymax1, width = Mandelbro
 
 julia> computeMandelbrot!(fractal1_data)
 
-julia> display(fractal1_data, filename = "mandelbrot1.png")
+julia> displayMandelbrot(fractal1_data, filename = "mandelbrot1.png")
 ```
 """
-function display(
+function displayMandelbrot(
     fractal::Matrix;
     colormap = cycle_cmap(:inferno, 3),
     background_color = :white,
@@ -311,9 +311,9 @@ function display(
 end
 
 # # version using the structure
-function display(fractal::FractalData; scale = :none, filename = :none, offset=0)
+function displayMandelbrot(fractal::FractalData; scale = :none, filename = :none, offset=0)
     if scale == :none
-        display(
+        displayMandelbrot(
             fractal.fractal,
             colormap = fractal.colormap,
             background_color = fractal.background_color,
@@ -322,7 +322,7 @@ function display(fractal::FractalData; scale = :none, filename = :none, offset=0
             offset = offset,
         )
     else
-        display(
+        displayMandelbrot(
             fractal.fractal,
             colormap = fractal.colormap,
             background_color = fractal.background_color,
@@ -338,7 +338,7 @@ end
 
 Function used to preview the fractal contained in a `FractalData` object before computing it.
 
-See also: [`display`](@ref)
+See also: [`displayMandelbrot`](@ref)
 """
 function preview(
     fractal_data::FractalData;
@@ -369,7 +369,7 @@ function preview(
         )
     end
 
-    return display(
+    return displayMandelbrot(
         pixels,
         colormap = fractal_data.colormap,
         scale = scale,
@@ -455,7 +455,7 @@ end
 #                 false,
 #             )
 #
-#             display(
+#             displayMandelbrot(
 #                 img,
 #                 colormap = colormap,
 #                 scale = scale,
@@ -478,7 +478,7 @@ end
 #                 false,
 #             )
 #
-#             display(
+#             displayMandelbrot(
 #                 img,
 #                 colormap = colormap,
 #                 scale = scale,
@@ -575,7 +575,7 @@ end
 #             img[1, 1] = maxVal
 #             img[1, 2] = 0.0
 #
-#             display(
+#             displayMandelbrot(
 #                 img,
 #                 colormap = colormap,
 #                 scale = scale,
@@ -602,7 +602,7 @@ end
 #             img[1, 1] = maxVal
 #             img[1, 2] = 0.0
 #
-#             display(
+#             displayMandelbrot(
 #                 img,
 #                 colormap = colormap,
 #                 scale = scale,
@@ -769,7 +769,7 @@ function create_animation(
 
             img .+= 10 #remove zeros
 
-            display(
+            displayMandelbrot(
                 img,
                 colormap = cmap,
                 scale = scale,
@@ -812,7 +812,7 @@ function create_animation(
 
             img .+= 10 #remove zeros
 
-            display(
+            displayMandelbrot(
                 img,
                 colormap = cmap,
                 scale = scale,

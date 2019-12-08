@@ -123,14 +123,33 @@ fractal4b_data = FractalData(
     scale_function = scale4,
 )
 
+
+xmin5=-1.262440431894299
+xmax5=-1.2624404318626976
+ymin5=0.4082647088979621
+ymax5=0.40826470892164096
+cmap5 = Mandelbrot.fire_and_ice(3)
+
+fractal5_data = FractalData(
+    xmin5,
+    xmax5,
+    ymin5,
+    ymax5,
+    width = Mandelbrot.w_HD,
+    height = Mandelbrot.h_HD,
+    colormap = cmap5,
+    maxIter = maxIter4,
+    scale_function = scale4,
+)
+
 #%% number 1
 computeMandelbrot!(fractal1_data)
 
-display(fractal1_data,
+displayMandelbrot(fractal1_data,
     # filename = "images/mandelbrot1.png"
 )
 #%%
-display(
+displayMandelbrot(
     fractal1_data,
     scale = log,
     # filename = "mandelbrot-fractal/images/mandelbrot1b.png"
@@ -141,7 +160,7 @@ fractal1_data.colormap = Mandelbrot.fire_and_ice(2)
 fractal1_data.background_color = :black
 scale = x-> x^-1
 
-display(fractal1_data, scale = scale,
+displayMandelbrot(fractal1_data, scale = scale,
  # filename="images/mandelbrot1c",
  offset=0)
 
@@ -149,30 +168,35 @@ display(fractal1_data, scale = scale,
 #%% number 2
 computeMandelbrot!(fractal2_data)
 
-display(fractal2_data,
+displayMandelbrot(fractal2_data,
     # filename = "mandelbrot-fractal/images/mandelbrot2.png"
 )
 
 #%% number 3
 computeMandelbrot!(fractal3_data)
 
-display(fractal3_data,
+displayMandelbrot(fractal3_data,
     # filename = "mandelbrot-fractal/images/mandelbrot3d.png"
 )
 #%% number 3 using GPU
 @btime computeMandelbrot!(fractal3_data, use_GPU=true, verbose=false)
 @btime computeMandelbrot!(fractal3_data, use_GPU=false, verbose=false)
 
-display(fractal3_data,
+displayMandelbrot(fractal3_data,
     # filename = "mandelbrot-fractal/images/mandelbrot3d.png"
 )
 
 #%% number 4
 computeMandelbrot!(fractal4_data)
 
-display(fractal4_data,
+displayMandelbrot(fractal4_data,
     # filename = "mandelbrot-fractal/images/mandelbrot4.png"
 )
+#%%
+
+computeMandelbrot!(fractal5_data)
+Mandelbrot.displayMandelbrot(fractal5_data, scale=x->-1/x, filename="images/mandelbrot5")
+
 #%% navigation
 
 fractal0_data.maxIter = 50
@@ -192,7 +216,7 @@ coords = Mandelbrot.get_coords(fractal0_data) #let's save the coordinates for fu
 Mandelbrot.set_coords(fractal0_data, coords...)
 
 computeMandelbrot!(fractal0_data) # compute 4k resolution image
-display(fractal0_data, scale = x->1/log10(x),
+displayMandelbrot(fractal0_data, scale = x->1/log10(x),
     filename = "images/mandelbrot_movement.png"
 ) #plot and save the fractal
 
@@ -204,3 +228,25 @@ Mandelbrot.create_animation(
     scale = log10,
     colormap = Mandelbrot.fire_and_ice(),
 )
+
+#%%
+fractal0_data.maxIter = 10000
+preview(fractal0_data, scale = :linear)
+Mandelbrot.move_left!(fractal0_data, 20)
+Mandelbrot.move_right!(fractal0_data, 5)
+Mandelbrot.move_up!(fractal0_data, 50)
+Mandelbrot.move_down!(fractal0_data, 5)
+
+fractal0_data.maxIter = 500 #increas maximum number of iterations
+Mandelbrot.zoom!(fractal0_data, 10)
+Mandelbrot.move_center!(fractal0_data, -35, 0)
+Mandelbrot.zoom!(fractal0_data, 10)
+Mandelbrot.move_center!(fractal0_data, -30, 0)
+fractal0_data.maxIter = 1000
+preview(fractal0_data, scale = x->1/log10(x))
+
+Mandelbrot.get_coords(fractal0_data)
+
+(0.2871372209449980505979738154564984142780303955078125, 0.2871372209749980530801849454292096197605133056640625, 0.0134189404439997612972224061422821250744163990020751953125, 0.013418940467999761201323138948282576166093349456787109375)
+
+#%%

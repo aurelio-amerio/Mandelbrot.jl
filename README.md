@@ -61,7 +61,7 @@ fractal1_data = FractalData(
 
 computeMandelbrot!(fractal1_data) 
 
-display(fractal1_data, filename = "mandelbrot1.png")
+displayMandelbrot(fractal1_data, filename = "mandelbrot1.png")
 ```
 
 ![image-center](images/mandelbrot1_small.jpg)
@@ -106,7 +106,7 @@ coords = Mandelbrot.get_coords(fractal0_data) #let's save the coordinates for fu
 Mandelbrot.set_coords(fractal0_data, coords...) #use this function if you want to quickly load some coordinates 
 
 computeMandelbrot!(fractal0_data) # compute 4k resolution image
-display(fractal0_data, scale = x->1/log10(x),
+displayMandelbrot(fractal0_data, scale = x->1/log10(x),
     filename = "images/mandelbrot_movement.png"
 ) #plot and save the fractal
 ```
