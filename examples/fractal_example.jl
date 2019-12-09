@@ -232,7 +232,7 @@ Mandelbrot.displayMandelbrot(fractal5_data, scale=x->-1/x, filename="images/mand
 
 #%% number 6
 preview(fractal6_data)
-Mandelbrot.move_right!(fractal6_data, 20)
+computeMandelbrot!(fractal6_data)
 
 #%% number 7
 Mandelbrot.get_coords(fractal7_data)
