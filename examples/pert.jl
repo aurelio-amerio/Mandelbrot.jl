@@ -1,5 +1,6 @@
 using ProgressMeter
 using Plots
+using Base.Threads
 
 function δz(dzr, dzi, size = 3)
     res = zeros(Complex{Float64}, size, size)
@@ -25,7 +26,7 @@ function computePatch(
     zi = zero(T)
     c = complex(cr, ci)
     z = complex(zr, zi)
-    z_arr = zeros(Complex{T}, maxIter)
+    z_arr = zeros(Complex{Float64}, maxIter)
     ε_arr = zeros(Complex{Float64}, patchSize, patchSize, maxIter + 1)
     # A_arr = zeros(Complex{Float64}, maxIter+1)
     # A_arr[1] = 1
@@ -52,13 +53,16 @@ function computePatch(
 
         z = z^2 + c
         z_arr[i+1] = convert(Complex{Float64}, z)
+        if abs(z) > 2
+            break
+        end
     end
 
     for j = 1:patchSize
         for i = 1:patchSize
             for iter = 1:(maxIter-1)
                 zprime = z_arr[iter] + ε_arr[i, j, iter]
-                if abs(zprime) > 2
+                if abs(zprime) > 2 || abs(z_arr[iter])>2
                     result[i, j] = iter
                     break
                 end
@@ -70,22 +74,38 @@ function computePatch(
 end
 
 #%%
-xmin = -2.2
-xmax = 0.8
-ymin = -1.2
-ymax = 1.2
+xmin = BigFloat("0.2503006273651145643691")
+xmax = BigFloat("0.2503006273651201870891")
+ymin = BigFloat("0.0000077612880963380370")
+ymax = BigFloat("0.0000077612881005550770")
 
-dx = (xmax-xmin)/1920
-dy = (ymax-ymin)/1080
+width=1920
+height=1080
+maxIter=50000
 
-x_arr = range(xmin+dx, xmax-dx, step=3*dx)
-y_arr = range(ymin+dy, ymax-dy, step=3*dy)
+dx = (xmax-xmin)/width
+dy = (ymax-ymin)/height
 
-image = zeros(1080,1920)
+x_arr = range(xmin+dx, xmax-dx, step=5*dx)
+y_arr = range(ymin+dy, ymax-dy, step=5*dy)
+
+image = zeros(height,width)
 #%%
-@showprogress for (j,x) in enumerate(x_arr)
-    for (i,y) in enumerate(y_arr)
-        image[(i*3-2):i*3, (j*3-2):j*3] = computePatch(x,y,dx,dy,100,3)
+p = Progress(length(x_arr))
+update!(p, 0)
+jj = Threads.Atomic{Int}(0)
+l = Threads.SpinLock()
+
+
+setprecision(100) do
+    @threads for j in 1:length(x_arr)
+        for i in 1:length(y_arr)
+            image[(i*5-4):i*5, (j*5-4):j*5] = computePatch(x_arr[j],y_arr[i],dx,dy,maxIter,5)
+        end
+        Threads.atomic_add!(jj, 1)
+        Threads.lock(l)
+        update!(p, jj[])
+        Threads.unlock(l)
     end
 end
 #%%
