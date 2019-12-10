@@ -212,7 +212,7 @@ Function to make a colormap cyclic.
 """
 function cycle_cmap(cmap::Symbol, nRepeat::Int = 1, cyclic=false)
     if cyclic
-        colors = vcat(cgrad(cmap).colors, revert(cgrad(cmap).colors))
+        colors = vcat(cgrad(cmap).colors, reverse(cgrad(cmap).colors))
         return ColorGradient(repeat(colors, nRepeat))
     else
         return ColorGradient(repeat(cgrad(cmap).colors, nRepeat))
@@ -221,7 +221,7 @@ end
 
 function cycle_cmap(cmap::ColorGradient, nRepeat::Int = 1, cyclic=false)
     if cyclic
-        colors = vcat(cmap.colors, revert(cmap.colors))
+        colors = vcat(cmap.colors, reverse(cmap.colors))
         return ColorGradient(repeat(colors, nRepeat))
     else
         return ColorGradient(repeat(cmap.colors, nRepeat))
@@ -837,4 +837,3 @@ function create_animation(
     gif(anim, filename, fps = fps)
 
 end
-d
